@@ -15,7 +15,7 @@ public class Navigator {
         this.currentMap = currentMap;
         this.x = currentMap.x;
         this.y = currentMap.y;
-        movements = new String[currentMap.x][currentMap.y];
+        movements = new String[currentMap.y][currentMap.x];
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++) {
                 if (currentMap.floor.get(i).get(j).type.equals("outOfBounds")) {
@@ -43,50 +43,36 @@ public class Navigator {
             int point1Y = Integer.parseInt(parts1[1]);
             int point2X = Integer.parseInt(parts2[0]);
             int point2Y = Integer.parseInt(parts2[1]);
-            System.out.println("Trying right with " + parts1[2] + " to " + parts2[2]);
             if (move("Right", 0, point1X, point2X, point1Y, point2Y, false) < bestMoveCount) {
                 bestIndex = i + 1;
                 bestMoveCount = move("Right", 0, point1X, point2X, point1Y, point2Y, false);
             }
-            System.out.println("Trying Left with " + parts1[2] + " to " + parts2[2]);
             if (move("Left", 0, point1X, point2X, point1Y, point2Y, false) < bestMoveCount) {
 
                 bestIndex = i + 1;
                 bestMoveCount = move("Left", 0, point1X, point2X, point1Y, point2Y, false);
             }
-            System.out.println("Trying Down with " + parts1[2] + " to " + parts2[2]);
             if (move("Down", 0, point1X, point2X, point1Y, point2Y, false) < bestMoveCount) {
 
                 bestIndex = i + 1;
                 bestMoveCount = move("Down", 0, point1X, point2X, point1Y, point2Y, false);
             }
-            System.out.println("Trying Up with " + parts1[2] + " to " + parts2[2]);
             if (move("Up", 0, point1X, point2X, point1Y, point2Y, false) < bestMoveCount) {
 
                 bestIndex = i + 1;
                 bestMoveCount = move("Up", 0, point1X, point2X, point1Y, point2Y, false);
             }
         }
-        System.out.println("ShoppingList looks like" + shoppingList.toString());
-        System.out.println("Adding " + shoppingList.get(0) + " to realList");
         realList.add(shoppingList.get(0));
-        System.out.println("realList now looks like " + realList.toString());
         String move = shoppingList.get(bestIndex);
-        System.out.println("removing " + shoppingList.get(bestIndex) + " from shoppingList");
         shoppingList.remove(bestIndex);
-        System.out.println("ShoppingList now looks like " + shoppingList.toString());
-        System.out.println("adding " + move + " to the front of shoppingList");
         shoppingList.remove(0);
         shoppingList.add(0, move);
-        System.out.println("ShoppingList now looks like " + shoppingList.toString());
         if (shoppingList.size() > 1) {
             getPath(shoppingList);
         } else {
-            System.out.println("Adding final item to the realList.  Final item is " + shoppingList.get(0));
             realList.add(shoppingList.get(0));
-            System.out.print("realList now looks like " + realList.toString());
             realList.add(currentMap.exitX + " " + currentMap.exitY + " exit");
-            System.out.println("The final map is " + realList.toString());
         }
 
     }
@@ -94,22 +80,18 @@ public class Navigator {
     public int move(String direction, int count, int x1, int x2, int y1, int y2, boolean editMovements) {
 
         if (editMovements == true) {    //marks all positions as long as they are not entrance and exit.
-            System.out.println("Committing move X1: " + x1 + " Y1: " + y1 + " X2: " + x2 + " Y2: " + y2);
             if (!movements[y1][x1].equals("exit") && !movements[y1][x1].equals("entrance")) {
                 if (movements[y1][x1].equals("1") || movements[y1][x1].equals("2") || movements[y1][x1].equals("3") || movements[y1][x1].equals("4")) {
-                    int holder = Integer.parseInt(movements[y1][x1]); //MAYBE PROBLEM
+                    int holder = Integer.parseInt(movements[y1][x1]);
                     holder++;
-                    System.out.println("From " + movements[y1][x1] + " to " + holder);
                     movements[y1][x1] = Integer.toString(holder);
                 } else {
-                    System.out.println("From " + movements[y1][x1] + " to " + 1);
                     movements[y1][x1] = "1";
                 }
             }
 
         }
         if (x1 == x2 && y1 == y2) {
-            System.out.println("Made it from point A to point B");
             return count;
         }
         if (direction.equals("Right")) {
@@ -222,9 +204,7 @@ public class Navigator {
 
     public void createMovements() {
         for (int i = 0; i < realList.size() - 1; i++) {
-            System.out.println("RealList looks like " + realList.toString());
             String point1 = realList.get(i);
-            System.out.println("Point 1 :" + point1);
             String point2 = realList.get(i + 1);
             String[] point1Parts = point1.split(" ");
             String[] point2Parts = point2.split(" ");
@@ -232,28 +212,20 @@ public class Navigator {
             int point1Y = Integer.parseInt(point1Parts[1]);
             int point2X = Integer.parseInt(point2Parts[0]);
             int point2Y = Integer.parseInt(point2Parts[1]);
-            System.out.println("1X " + point1X + " 1Y " + point1Y + " 2X " + point2X + " 2Y " + point2Y);
-            System.out.println("About to start big if statement");
+
             if (move("Right", 0, point1X, point2X, point1Y, point2Y, false) <= move("Left", 0, point1X, point2X, point1Y, point2Y, false)
                     && move("Right", 0, point1X, point2X, point1Y, point2Y, false) <= move("Down", 0, point1X, point2X, point1Y, point2Y, false)
                     && move("Right", 0, point1X, point2X, point1Y, point2Y, false) <= move("Up", 0, point1X, point2X, point1Y, point2Y, false)) {
-                System.out.println("Choosing right for " + point1Parts[2] + " to " + point2Parts[2]);
                 move("Right", 0, point1X, point2X, point1Y, point2Y, true);
             } else if (move("Left", 0, point1X, point2X, point1Y, point2Y, false) <= move("Down", 0, point1X, point2X, point1Y, point2Y, false)
                     && move("Left", 0, point1X, point2X, point1Y, point2Y, false) <= move("Up", 0, point1X, point2X, point1Y, point2Y, false)) {
-                System.out.println("Choosing left for " + point1Parts[2] + " to " + point2Parts[2]);
                 move("Left", 0, point1X, point2X, point1Y, point2Y, true);
             } else if (move("Down", 0, point1X, point2X, point1Y, point2Y, false) <= move("Up", 0, point1X, point2X, point1Y, point2Y, false)) {
-                System.out.println("Choosing down for " + point1Parts[2] + " to " + point2Parts[2]);
                 move("Down", 0, point1X, point2X, point1Y, point2Y, true);
             } else {
-                System.out.println("Choosing up for " + point1Parts[2] + " to " + point2Parts[2]);
                 move("Up", 0, point1X, point2X, point1Y, point2Y, true);
             }
         }
-
-        printOut();
-
         drawMap();
     }
 

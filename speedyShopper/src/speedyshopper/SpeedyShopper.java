@@ -62,7 +62,6 @@ public class SpeedyShopper {
         String[] dimensionParts = dimensions.split(",");
         int x = Integer.parseInt(dimensionParts[0]);
         int y = Integer.parseInt(dimensionParts[1]);
-        System.out.println("The X is: " + dimensionParts[0] + " The Y is: " + dimensionParts[1]);
         currentMap = new Map(fileName, x, y);
 
         currentMap.createBlankMap();
@@ -88,8 +87,6 @@ public class SpeedyShopper {
             }
             }
         }
-        System.out.println("The loaded map looks like");
-        currentMap.printOut();
         currentMap.createSaveFile();
 
         return currentMap;
@@ -109,9 +106,7 @@ public class SpeedyShopper {
         currentMap = new Map(newMapName, x, y);
         currentMap.createBlankMap();
         currentMap.createSaveFile();
-        currentMap.printOut();
         currentMap.addEntranceAndExit();
-        
         currentMap.addOutOfBounds();
         currentMap.addGroceries();
         currentMap.createSaveFile();
@@ -122,7 +117,6 @@ public class SpeedyShopper {
         Scanner scan = new Scanner(System.in);
         shoppingList = new ArrayList();
         shoppingList.add(currentMap.entranceX + " " + currentMap.entranceY + " entrance");
-        System.out.println("Adding entrance " + currentMap.entranceX + " " + currentMap.entranceY + " to shopping list");
         boolean exit = false;
         while (exit == false) {
             System.out.println("Please insert the name of your grocery item (enter q when finished)");
@@ -166,7 +160,7 @@ public class SpeedyShopper {
 
             }
         }
-        System.out.println("The final list is " + shoppingList.toString());
+        System.out.println("Your shopping list is: " + shoppingList.toString());
         navigateStore();
 
     }
@@ -175,7 +169,5 @@ public class SpeedyShopper {
         Navigator navigate = new Navigator(currentMap);
         navigate.getPath(shoppingList);
         navigate.createMovements();
-        
     }
-
 }
