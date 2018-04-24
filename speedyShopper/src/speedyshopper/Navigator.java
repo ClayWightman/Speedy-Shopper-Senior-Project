@@ -19,13 +19,13 @@ public class Navigator {
         for (int i = 0; i < y; i++) {
             for (int j = 0; j < x; j++) {
                 if (currentMap.floor.get(i).get(j).type.equals("outOfBounds")) {
-                    movements[j][i] = "outOfBounds";
+                    movements[i][j] = "outOfBounds";
                 } else if (currentMap.floor.get(i).get(j).type.equals("floorTile")) {
-                    movements[j][i] = "floorTile";
+                    movements[i][j] = "floorTile";
                 } else if (currentMap.floor.get(i).get(j).type.equals("exit")) {
-                    movements[j][i] = "exit";
+                    movements[i][j] = "exit";
                 } else if (currentMap.floor.get(i).get(j).type.equals("entrance")) {
-                    movements[j][i] = "entrance";
+                    movements[i][j] = "entrance";
                 }
             }
         }
@@ -92,17 +92,21 @@ public class Navigator {
     }
 
     public int move(String direction, int count, int x1, int x2, int y1, int y2, boolean editMovements) {
-        
-        if (editMovements == true) {
-            System.out.println("X1: " + x1 + " Y1: " + y1 + " X2 " + x2 + " Y2 " + y2);
-            if(movements.equals("1") || movements.equals("2") || movements.equals("3") || movements.equals("4")){
-            int holder = Integer.parseInt(movements[x1][y1]); //MAYBE PROBLEM
-            holder++;
-            movements[y1][x1] = Integer.toString(holder);
-            }else{
-                movements[y1][x1] = "1";
+
+        if (editMovements == true) {    //marks all positions as long as they are not entrance and exit.
+            System.out.println("Committing move X1: " + x1 + " Y1: " + y1 + " X2: " + x2 + " Y2: " + y2);
+            if (!movements[y1][x1].equals("exit") && !movements[y1][x1].equals("entrance")) {
+                if (movements[y1][x1].equals("1") || movements[y1][x1].equals("2") || movements[y1][x1].equals("3") || movements[y1][x1].equals("4")) {
+                    int holder = Integer.parseInt(movements[y1][x1]); //MAYBE PROBLEM
+                    holder++;
+                    System.out.println("From " + movements[y1][x1] + " to " + holder);
+                    movements[y1][x1] = Integer.toString(holder);
+                } else {
+                    System.out.println("From " + movements[y1][x1] + " to " + 1);
+                    movements[y1][x1] = "1";
+                }
             }
-//            movements[x1][y1]++;
+
         }
         if (x1 == x2 && y1 == y2) {
             System.out.println("Made it from point A to point B");
@@ -228,21 +232,21 @@ public class Navigator {
             int point1Y = Integer.parseInt(point1Parts[1]);
             int point2X = Integer.parseInt(point2Parts[0]);
             int point2Y = Integer.parseInt(point2Parts[1]);
-            System.out.println("1X " + point1X + " 2X " + point2X + " 1Y " + point1Y + " 2Y " + point2Y);
+            System.out.println("1X " + point1X + " 1Y " + point1Y + " 2X " + point2X + " 2Y " + point2Y);
             System.out.println("About to start big if statement");
             if (move("Right", 0, point1X, point2X, point1Y, point2Y, false) <= move("Left", 0, point1X, point2X, point1Y, point2Y, false)
                     && move("Right", 0, point1X, point2X, point1Y, point2Y, false) <= move("Down", 0, point1X, point2X, point1Y, point2Y, false)
                     && move("Right", 0, point1X, point2X, point1Y, point2Y, false) <= move("Up", 0, point1X, point2X, point1Y, point2Y, false)) {
                 System.out.println("Choosing right for " + point1Parts[2] + " to " + point2Parts[2]);
                 move("Right", 0, point1X, point2X, point1Y, point2Y, true);
-            } if (move("Left", 0, point1X, point2X, point1Y, point2Y, false) <= move("Down", 0, point1X, point2X, point1Y, point2Y, false)
+            } else if (move("Left", 0, point1X, point2X, point1Y, point2Y, false) <= move("Down", 0, point1X, point2X, point1Y, point2Y, false)
                     && move("Left", 0, point1X, point2X, point1Y, point2Y, false) <= move("Up", 0, point1X, point2X, point1Y, point2Y, false)) {
                 System.out.println("Choosing left for " + point1Parts[2] + " to " + point2Parts[2]);
                 move("Left", 0, point1X, point2X, point1Y, point2Y, true);
-            } if (move("Down", 0, point1X, point2X, point1Y, point2Y, false) <= move("Up", 0, point1X, point2X, point1Y, point2Y, false)) {
+            } else if (move("Down", 0, point1X, point2X, point1Y, point2Y, false) <= move("Up", 0, point1X, point2X, point1Y, point2Y, false)) {
                 System.out.println("Choosing down for " + point1Parts[2] + " to " + point2Parts[2]);
                 move("Down", 0, point1X, point2X, point1Y, point2Y, true);
-            } {
+            } else {
                 System.out.println("Choosing up for " + point1Parts[2] + " to " + point2Parts[2]);
                 move("Up", 0, point1X, point2X, point1Y, point2Y, true);
             }
@@ -257,7 +261,7 @@ public class Navigator {
         for (int i = 0; i < y; i++) {
             System.out.println();
             for (int j = 0; j < x; j++) {
-                System.out.print(movements[j][i] + " ");
+                System.out.print(movements[i][j] + " ");
             }
         }
     }
@@ -267,7 +271,7 @@ public class Navigator {
         frame.setVisible(true);
         frame.setSize(1000, 1000);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        draw object = new draw(movements, x, y);
+        draw object = new draw(movements,realList, x, y);
         frame.add(object);
         object.drawing();
     }
